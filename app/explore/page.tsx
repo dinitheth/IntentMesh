@@ -1,16 +1,18 @@
+
 'use client'
 import { useEffect, useState } from 'react'
+import type { Intent } from '../../types'
 
 export default function Explore() {
-  const [intents, setIntents] = useState<any[]>([])
+  const [intents, setIntents] = useState<Intent[]>([])
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('intents') || '[]')
+    const stored: Intent[] = JSON.parse(localStorage.getItem('intents') || '[]')
     setIntents(stored)
   }, [])
 
   const fulfillIntent = (id: string) => {
-    const updated = intents.map(intent =>
+    const updated: Intent[] = intents.map((intent) =>
       intent.id === id ? { ...intent, status: 'fulfilled' } : intent
     )
     setIntents(updated)
@@ -18,20 +20,20 @@ export default function Explore() {
   }
 
   const matchAndAutoFulfill = () => {
-    const updated = [...intents]
-    const pending = updated.filter(i => i.status === 'pending')
-    for (let i = 0; i < pending.length; i++) {
-      for (let j = i + 1; j < pending.length; j++) {
+    const updated = intents.map((intent) => ({ ...intent }))
+    for (let i = 0; i < updated.length; i++) {
+      for (let j = i + 1; j < updated.length; j++) {
+        const a = updated[i]
+        const b = updated[j]
         if (
-          pending[i].from === pending[j].to &&
-          pending[i].to === pending[j].from &&
-          pending[i].amount === pending[j].amount &&
-          pending[i].status === 'pending' &&
-          pending[j].status === 'pending'
+          a.status === 'pending' &&
+          b.status === 'pending' &&
+          a.from === b.to &&
+          a.to === b.from &&
+          a.amount === b.amount
         ) {
-          pending[i].status = 'fulfilled'
-          pending[j].status = 'fulfilled'
-          break
+          a.status = 'fulfilled'
+          b.status = 'fulfilled'
         }
       }
     }
