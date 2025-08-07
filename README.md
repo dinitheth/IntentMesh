@@ -1,6 +1,6 @@
 # IntentMesh
 
-Local-first simulation of an intent-centric dApp using Next.js and TailwindCSS.
+Local-first simulation of an intent-centric dApp using Next.js and TailwindCSS. All intents are persisted in browser `localStorage` and matched locally without any network dependency.
 
 ## Features
 - Create, explore, and fulfill swap intents locally

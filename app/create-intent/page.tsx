@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import type { Intent } from '../../types'
 
 export default function CreateIntent() {
   const [from, setFrom] = useState('USDC')
@@ -10,20 +11,20 @@ export default function CreateIntent() {
   const [privacy, setPrivacy] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const newIntent = {
+    const newIntent: Intent = {
       id: Date.now().toString(),
       type: 'swap',
       from,
       to,
-      amount,
-      minRate,
+      amount: Number(amount),
+      minRate: Number(minRate),
       privacy,
       status: 'pending',
-      createdBy: 'user123'
+      createdBy: 'user123',
     }
-    const stored = JSON.parse(localStorage.getItem('intents') || '[]')
+    const stored: Intent[] = JSON.parse(localStorage.getItem('intents') || '[]')
     stored.push(newIntent)
     localStorage.setItem('intents', JSON.stringify(stored))
     router.push('/explore')
